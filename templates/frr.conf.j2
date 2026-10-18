@@ -1,0 +1,25 @@
+frr defaults datacenter
+hostname {{ name }}
+service integrated-vtysh-config
+!
+interface lo
+ ip address {{ loopback }}/32
+!
+{% if gateway is defined %}
+interface {{ gateway.interface }}
+ ip address {{ gateway.ip }}
+!
+{% endif %}
+router bgp {{ asn }}
+ bgp router-id {{ loopback }}
+ no bgp ebgp-requires-policy
+{% if role == "leaf"  %}
+ bgp bestpath as-path multipath-relax
+{%  endif %}
+{% for p in fabric_ports  %}
+ neighbor {{ p }} interface remote-as external
+ {% endfor %}
+ address-family ipv4 unicast
+  redistribute connected
+  maximum-paths 4
+ exit-address-family
