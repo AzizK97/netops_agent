@@ -1,0 +1,131 @@
+uv run python render.py
+[1m[36mrender**************************************************************************[0m
+[0m[1m[34m* leaf1 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/leaf1.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf2 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/leaf2.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf3 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/leaf3.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf4 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/leaf4.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* spine1 ** changed : False ****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/spine1.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* spine2 ** changed : False ****************************************************[0m
+[0m[1m[32mvvvv render ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0mconfigs/spine2.conf written[0m
+[0m[1m[32m^^^^ END render ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0muv run python push.py
+[1m[36mpush****************************************************************************[0m
+[0m[1m[34m* leaf1 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65011
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65011
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf2 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65012
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65012
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf3 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65013
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65013
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* leaf4 ** changed : False *****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65014
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65014
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* spine1 ** changed : False ****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65000
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65000
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m[1m[34m* spine2 ** changed : False ****************************************************[0m
+[0m[1m[32mvvvv push ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO[0m
+[0m
+Lines To Delete
+===============
+router bgp 65000
+ bgp deterministic-med
+exit
+
+Lines To Add
+============
+router bgp 65000
+ no bgp ebgp-requires-policy
+exit
+service integrated-vtysh-config
+[0m
+[0m[1m[32m^^^^ END push ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m

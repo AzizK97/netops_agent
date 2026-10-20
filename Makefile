@@ -72,3 +72,12 @@ edgeshark-down:
 
 clean:
 	$(CLAB) destroy -t $(TOPO) --cleanup
+
+render:
+	uv run python render.py
+
+diff: render
+	uv run python push.py
+
+push: render
+	uv run python push.py --apply

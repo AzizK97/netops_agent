@@ -1,0 +1,6 @@
+spines:
+  data:
+    role: spine
+leaves:
+  data:
+    role: leaf
