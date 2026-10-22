@@ -2,7 +2,7 @@
 
 A containerized **spine–leaf data center fabric** built with [containerlab](https://containerlab.dev) and [FRRouting](https://frrouting.org), whose router configs are generated from a single source of truth with **Nornir + Jinja2** and pushed to the live routers.
 
-> **Status:** Lab 02, in progress. The fabric deploys, routes end to end and passes the reachability test. Render/diff/push automation works for all 6 routers (first iteration).
+> **Current state:** the fabric deploys, routes end to end and passes the reachability test. Render/diff/push automation works for all 6 routers (first iteration).
 
 ---
 
