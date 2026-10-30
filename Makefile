@@ -7,8 +7,11 @@ NODE   ?= leaf1
 SPINES := spine1 spine2
 LEAVES := leaf1 leaf2 leaf3 leaf4
 
+FRR_EXP_VER  := 1.12.0
+NODE_EXP_VER := 1.12.1
+
 .DEFAULT_GOAL := help
-.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean
+.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean render diff push exporters
 
 help:
 	@echo "make deploy         deploy the lab"
@@ -25,6 +28,10 @@ help:
 	@echo "make logs NODE=x    container logs of a node"
 	@echo "make edgeshark-up / edgeshark-down"
 	@echo "make clean          destroy + remove lab artifacts"
+	@echo "make render         render configs/ from inventory + templates"
+	@echo "make diff           render + show diff against running config"
+	@echo "make push           render + apply to the routers"
+	@echo "make exporters      download exporter binaries into bin/"
 
 deploy:
 	$(CLAB) deploy -t $(TOPO)
@@ -81,3 +88,15 @@ diff: render
 
 push: render
 	uv run python push.py --apply
+
+exporters: bin/frr_exporter bin/node_exporter
+
+bin/frr_exporter:
+	mkdir -p bin
+	curl -sL https://github.com/tynany/frr_exporter/releases/download/v$(FRR_EXP_VER)/frr_exporter-$(FRR_EXP_VER).linux-amd64.tar.gz \
+	  | tar xz -C bin --strip-components=1 frr_exporter-$(FRR_EXP_VER).linux-amd64/frr_exporter
+
+bin/node_exporter:
+	mkdir -p bin
+	curl -sL https://github.com/prometheus/node_exporter/releases/download/v$(NODE_EXP_VER)/node_exporter-$(NODE_EXP_VER).linux-amd64.tar.gz \
+	  | tar xz -C bin --strip-components=1 node_exporter-$(NODE_EXP_VER).linux-amd64/node_exporter

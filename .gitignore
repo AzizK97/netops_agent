@@ -1,3 +1,5 @@
 clab-data_center/
 .venv/
 __pycache__/
+bin/
+logs/
