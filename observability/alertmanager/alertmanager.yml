@@ -1,0 +1,6 @@
+route:
+  receiver: default
+  group_by: [alertname, node]
+  group_wait: 0
+receivers:
+  - name: default

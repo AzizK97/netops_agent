@@ -3,6 +3,7 @@ LAB    := data_center
 TOPO   := dc_lab.clab.yml
 PREFIX := clab-$(LAB)
 NODE   ?= leaf1
+OBS_COMPOSE := observability/compose.yml
 
 SPINES := spine1 spine2
 LEAVES := leaf1 leaf2 leaf3 leaf4
@@ -11,7 +12,7 @@ FRR_EXP_VER  := 1.12.0
 NODE_EXP_VER := 1.12.1
 
 .DEFAULT_GOAL := help
-.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean render diff push exporters
+.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean render diff push exporters targets
 
 help:
 	@echo "make deploy         deploy the lab"
@@ -32,14 +33,17 @@ help:
 	@echo "make diff           render + show diff against running config"
 	@echo "make push           render + apply to the routers"
 	@echo "make exporters      download exporter binaries into bin/"
+	@echo "make targets        generate the targets for Prometheus"
+	@echo "make obs-up         bring the observability up"
+	@echo "make obs-down       bring the observability  down"
 
-deploy:
+deploy: exporters
 	$(CLAB) deploy -t $(TOPO)
 
 destroy:
 	$(CLAB) destroy -t $(TOPO)
 
-redeploy:
+redeploy: exporters
 	$(CLAB) deploy -t $(TOPO) --reconfigure
 
 test:
@@ -80,7 +84,7 @@ edgeshark-down:
 clean:
 	$(CLAB) destroy -t $(TOPO) --cleanup
 
-render:
+render: targets
 	uv run python render.py
 
 diff: render
@@ -100,3 +104,12 @@ bin/node_exporter:
 	mkdir -p bin
 	curl -sL https://github.com/prometheus/node_exporter/releases/download/v$(NODE_EXP_VER)/node_exporter-$(NODE_EXP_VER).linux-amd64.tar.gz \
 	  | tar xz -C bin --strip-components=1 node_exporter-$(NODE_EXP_VER).linux-amd64/node_exporter
+
+targets:
+	uv run python render_targets.py
+
+obs-up: targets
+	docker compose -f $(OBS_COMPOSE) up -d
+
+obs-down:
+	docker compose -f $(OBS_COMPOSE) down
