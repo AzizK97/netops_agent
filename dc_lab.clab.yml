@@ -15,6 +15,7 @@ topology:
         - configs/spine1.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/spine1:/var/log/frr
       exec:
         - apk add tcpdump
         - sh -c "nohup frr_exporter --no-collector.ospf --no-collector.bfd >/dev/null 2>&1 &"
@@ -25,6 +26,7 @@ topology:
         - configs/spine2.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/spine2:/var/log/frr
       exec:
         - apk add tcpdump
         - sh -c "nohup frr_exporter --no-collector.ospf --no-collector.bfd >/dev/null 2>&1 &"
@@ -35,6 +37,7 @@ topology:
         - configs/leaf1.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/leaf1:/var/log/frr
       exec:
         - ip link add br0 type bridge
         - ip link set br0 up
@@ -49,6 +52,7 @@ topology:
         - configs/leaf2.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/leaf2:/var/log/frr
       exec:
         - apk add tcpdump
         - sh -c "nohup frr_exporter --no-collector.ospf --no-collector.bfd >/dev/null 2>&1 &"
@@ -59,6 +63,7 @@ topology:
         - configs/leaf3.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/leaf3:/var/log/frr
       exec:
         - ip link add br0 type bridge
         - ip link set br0 up
@@ -73,6 +78,7 @@ topology:
         - configs/leaf4.conf:/etc/frr/frr.conf:ro
         - bin/frr_exporter:/usr/local/bin/frr_exporter:ro
         - bin/node_exporter:/usr/local/bin/node_exporter:ro
+        - logs/leaf4:/var/log/frr
       exec:
         - apk add tcpdump
         - sh -c "nohup frr_exporter --no-collector.ospf --no-collector.bfd >/dev/null 2>&1 &"

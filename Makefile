@@ -12,7 +12,7 @@ FRR_EXP_VER  := 1.12.0
 NODE_EXP_VER := 1.12.1
 
 .DEFAULT_GOAL := help
-.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean render diff push exporters targets
+.PHONY: help deploy destroy redeploy test all inspect graph bgp routes vtysh shell logs edgeshark-up edgeshark-down clean render diff push exporters targets logdirs
 
 help:
 	@echo "make deploy         deploy the lab"
@@ -36,14 +36,15 @@ help:
 	@echo "make targets        generate the targets for Prometheus"
 	@echo "make obs-up         bring the observability up"
 	@echo "make obs-down       bring the observability  down"
+	@echo "make logdirs        creates the log directories for the FRR routers"
 
-deploy: exporters
+deploy: exporters logdirs
 	$(CLAB) deploy -t $(TOPO)
 
 destroy:
 	$(CLAB) destroy -t $(TOPO)
 
-redeploy: exporters
+redeploy: exporters logdirs
 	$(CLAB) deploy -t $(TOPO) --reconfigure
 
 test:
@@ -113,3 +114,7 @@ obs-up: targets
 
 obs-down:
 	docker compose -f $(OBS_COMPOSE) down
+
+logdirs:
+	mkdir -p $(addprefix logs/,$(SPINES) $(LEAVES))
+	chmod 777 logs/*        # FRR runs as uid 100 inside the container (lab only)

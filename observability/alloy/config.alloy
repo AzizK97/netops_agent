@@ -1,0 +1,24 @@
+local.file_match "frr" {
+  path_targets = [{"__path__" = "/logs/*/frr.log", "job" = "frr"}]
+}
+
+// turn /logs/leaf1/frr.log into node="leaf1"
+discovery.relabel "frr" {
+  targets = local.file_match.frr.targets
+  rule {
+    source_labels = ["__path__"]
+    regex         = "/logs/([^/]+)/frr.log"
+    target_label  = "node"
+  }
+}
+
+loki.source.file "frr" {
+  targets    = discovery.relabel.frr.output
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
