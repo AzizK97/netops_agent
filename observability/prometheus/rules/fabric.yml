@@ -1,0 +1,107 @@
+groups:
+  - name: fabric.bgp
+    rules:
+      - alert: BGPSessionDown
+        expr: label_replace(frr_bgp_peer_state != 1, "interface", "$1", "peer", "(.*)")
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "BGP session {{ $labels.node }} → {{ $labels.peer }} (AS{{ $labels.peer_as }}) is down"
+          description: "frr_bgp_peer_state is {{ $value }} (1 = Established). Hold time is 9s, so this has been down for at least 15s."
+
+      - alert: BGPSessionMissing
+        expr: max_over_time(frr_bgp_peer_state[1h]) unless frr_bgp_peer_state
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "BGP session {{ $labels.node }} → {{ $labels.peer }} disappeared"
+          description: "The session was reported during the last hour but no longer is. Check the neighbor config and bgpd on {{ $labels.node }}."
+
+      - alert: BGPSessionFlapping
+        expr: resets(frr_bgp_peer_uptime_seconds[10m]) >= 3
+        labels:
+          severity: warning
+        annotations:
+          summary: "BGP session {{ $labels.node }} → {{ $labels.peer }} reset {{ $value }} times in 10m"
+          description: "The session keeps re-establishing. Check the link for errors and the FRR logs for the reason."
+
+      - alert: BGPNoPrefixesReceived
+        expr: frr_bgp_peer_prefixes_received_count_total == 0 and on (node, peer, afi, safi) frr_bgp_peer_state == 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.node }} receives no prefixes from {{ $labels.peer }}"
+          description: "The session is Established but the neighbor advertises nothing, so no traffic can use it."
+
+  - name: fabric.interfaces
+    rules:
+      - alert: FabricLinkDown
+        expr: |
+          label_replace(
+            node_network_up{role="leaf", device=~"eth[12]"} == 0
+              or node_network_up{role="spine", device=~"eth[1-4]"} == 0,
+            "interface", "$1", "device", "(.*)")
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Fabric link {{ $labels.node }} {{ $labels.device }} is down"
+          description: "Operational state is down on a leaf-spine link. ECMP keeps traffic flowing through the other spine, at half the capacity."
+
+      - alert: HostPortDown
+        expr: node_network_up{role="leaf", device=~"eth[34]"} == 0
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host port {{ $labels.node }} {{ $labels.device }} is down"
+          description: "The host attached to this port is unreachable."
+
+      - alert: InterfaceErrors
+        expr: |
+          sum by (node, device) (
+              increase(node_network_receive_errs_total{device=~"eth[1-4]"}[5m])
+            + increase(node_network_transmit_errs_total{device=~"eth[1-4]"}[5m])
+          ) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.node }} {{ $labels.device }}: {{ $value | humanize }} errors in 5m"
+          description: "rx/tx errors usually mean a bad cable, optic or driver problem."
+
+      - alert: InterfaceDrops
+        expr: |
+          sum by (node, device) (
+              rate(node_network_receive_drop_total{device=~"eth[1-4]"}[5m])
+            + rate(node_network_transmit_drop_total{device=~"eth[1-4]"}[5m])
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.node }} {{ $labels.device }} drops {{ $value | humanize }} packets/s"
+          description: "Sustained drops usually mean congestion or full queues."
+
+  - name: fabric.monitoring
+    rules:
+      - alert: ExporterDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.job }} exporter on {{ $labels.node }} is unreachable"
+          description: "Prometheus cannot scrape {{ $labels.instance }}. The router may be fine, but it is not monitored; other alerts for {{ $labels.node }} are blind."
+
+      - alert: FRRCollectorFailing
+        # The exporter answers but cannot read from FRR (e.g. bgpd crashed).
+        expr: frr_collector_up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "frr_exporter {{ $labels.collector }} collector failing on {{ $labels.node }}"
+          description: "The exporter is up but cannot query FRR. Check that zebra and bgpd are running."
