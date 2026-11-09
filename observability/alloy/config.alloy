@@ -14,6 +14,21 @@ discovery.relabel "frr" {
 
 loki.source.file "frr" {
   targets    = discovery.relabel.frr.output
+  forward_to = [loki.process.frr.receiver]
+}
+
+loki.process "frr" {
+  stage.regex {
+    expression = `^(?P<ts>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) (?P<daemon>[A-Z]+):`
+  }
+  stage.timestamp {
+    source   = "ts"
+    format   = "2006/01/02 15:04:05.000"
+    location = "UTC"
+  }
+  stage.labels {
+    values = { daemon = "" }
+  }
   forward_to = [loki.write.local.receiver]
 }
 

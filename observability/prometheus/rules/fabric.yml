@@ -2,7 +2,7 @@ groups:
   - name: fabric.bgp
     rules:
       - alert: BGPSessionDown
-        expr: label_replace(frr_bgp_peer_state != 1, "interface", "$1", "peer", "(.*)")
+        expr: label_replace(frr_bgp_peer_state == 0, "interface", "$1", "peer", "(.*)")
         for: 15s
         labels:
           severity: critical

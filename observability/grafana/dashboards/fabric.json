@@ -36,6 +36,55 @@
           "name": "Annotations & Alerts",
           "builtIn": true
         }
+      },
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "loki",
+            "version": "v0",
+            "datasource": {
+              "name": "loki"
+            },
+            "spec": {
+              "expr": "{job=\"frr\", daemon=\"BGP\", node=~\"$node\"} |= \"ADJCHANGE\"",
+              "instant": false,
+              "titleFormat": "{{node}}",
+              "tagKeys": "node",
+              "textFormat": ""
+            }
+          },
+          "enable": true,
+          "hide": false,
+          "iconColor": "orange",
+          "name": "BGP neighbor changes"
+        }
+      },
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "prometheus",
+            "version": "v0",
+            "datasource": {
+              "name": "prom"
+            },
+            "spec": {
+              "expr": "ALERTS{alertstate=\"firing\", node=~\"$node\"}",
+              "step": "5s",
+              "titleFormat": "{{alertname}}",
+              "tagKeys": "alertname,severity",
+              "textFormat": "{{node}} {{interface}}",
+              "useValueForTime": false
+            }
+          },
+          "enable": true,
+          "hide": false,
+          "iconColor": "red",
+          "name": "Firing alerts"
+        }
       }
     ],
     "elements": {

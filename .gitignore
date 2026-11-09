@@ -3,3 +3,4 @@ clab-data_center/
 __pycache__/
 bin/
 logs/
+observability/alertmanager/secrets/
