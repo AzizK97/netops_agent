@@ -1,4 +1,4 @@
-# ai_nop — Data Center Fabric Lab
+# NetOps Agent — Data Center Fabric Lab
 
 A containerized **spine–leaf data center fabric** built with [containerlab](https://containerlab.dev) and [FRRouting](https://frrouting.org), whose router configs are generated from a single source of truth with **Nornir + Jinja2** and pushed to the live routers. An **observability stack** (Prometheus, Grafana, Loki, Alloy, Alertmanager) collects metrics and logs from every router.
 
